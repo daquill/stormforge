@@ -1,0 +1,137 @@
+<nav class="navbar navbar-default">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+				data-target="#navbar-collapse-header" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+			</button>
+
+			<a class="navbar-brand" href="#">StormForge RCON</a>
+		</div>
+	</div>
+</nav>
+
+<div ng-controller="ConnectionController" class="row" style="margin-top: 60px;">
+
+	<div class="col-sm-2 sidebar">
+
+		<ul class="nav nav-sidebar" style="position: sticky">
+			<li><a class="active" href="#/home">Home</a></li>
+			<li><a href="#" data-toggle="modal" data-target="#myServersModal" class="">My Servers</a>
+			</li>
+			<li><a class="" href="#/store">Store</a></li>
+
+		</ul>
+
+	</div>
+
+	<div class="col-md-6 panel jumbotron">
+		<form name="connectionForm" ng-submit="Connect()">
+			<h2 class="text-center">{{ ConnectTitle }}</h2>
+
+			<div class="alert alert-danger" ng-show="LastErrorMessage != null">
+				{{LastErrorMessage}}
+			</div>
+
+			<p>Enter your IP address followed by your port, and then your RCON password to be able to connect to your
+				server
+			</p>
+
+			<div ng-model="rconform">
+				<div class="form-group">
+					<label for="connection-address">Address</label>
+					<input required minlength="5" ng-model="Address" name="Address" class="form-control"
+						placeholder="xxx.xxx.xxx.xxx:28016" id="connection-address"
+						ng-disabled="selectedGame !== 'Rust'">
+				</div>
+
+				<div class="form-group">
+					<label for="connection-password">Password</label>
+					<input required minlength="2" type="text" ng-model="Password" name="Password" class="form-control"
+						id="connection-password" ng-disabled="selectedGame !== 'Rust'">
+				</div>
+
+				<div class="alert alert-info" ng-show="selectedGame !== 'Rust'">These features are not available yet
+				</div>
+			</div>
+
+			<div ng-model="gameselect">
+				<div class="pull-left">
+					<select class="dd-bg-primary" name="selectedGame" ng-model="selectedGame"
+						ng-options="option.value as option.label for option in gameOptions"></select>
+				</div>
+				<div class="pull-right">
+					<label>
+						<input type="checkbox" ng-model="SaveConnection"> Save Connection
+					</label>
+				</div>
+				<button type="submit" class="btn btn-primary btn-block">Connect</button>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="modal fade" id="editServerNameModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+						aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Edit Server Name</h4>
+			</div>
+			<div class="modal-body">
+				<input type="text" class="form-control" ng-model="editingServerName">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" ng-click="saveServerName(editingConnection)">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="myServersModal" tabindex="-1" role="dialog" aria-labelledby="myServersModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header bg-info">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title text-primary" id="myServersModalLabel">My Servers</h4>
+			</div>
+			<div class="modal-body bg-info">
+				<div ng-show="PreviousConnects.length > 0">
+					<p class="text-primary">Saved Connections</p>
+					<ul ng-repeat="c in PreviousConnects | orderBy:array:true | limitTo:connectionsLimit">
+						<li>
+							<a ng-click="toggleEditServerName(c)">
+								<i class="glyphicon glyphicon-pencil"></i>
+							</a>
+							<input type="text" ng-model="c.editingName" ng-show="c.editing"
+								style="background-color: #42555e; border: 1px solid #007BFF;"
+								ng-keypress="onKeyPress($event, c)" ng-focus="autofocus">
+							<a ng-click="ConnectTo(c)" href="#/{{c.Address}}/" data-dismiss="modal" aria-label="Close">
+								<span ng-hide="c.editing">{{c.Name}} : {{c.Address}}</span>
+								<span ng-show="c.editing">{{c.Address}}</span>
+							</a>
+							<a ng-click="Delete(c)" href="#">
+								<i class="glyphicon glyphicon-trash"></i>
+							</a>
+						</li>
+					</ul>
+
+					<div>
+						<button type="button" class="btn btn-danger" ng-click="addFakeConnection()">Add Fake
+							Connection</button>
+					</div>
+
+					<div ng-show="PreviousConnects.length > connectionsLimit || connectionsLimit === undefined">
+						<button type="submit" class="btn btn-primary btn-block" ng-click="toggleConnectionsLimit()">
+							Show {{(connectionsLimit === undefined) ? 'less' : 'more'}}
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>

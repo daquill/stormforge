@@ -1,0 +1,184 @@
+<div ng-controller="PlayerListController" id="PlayerListController">
+
+	<div class="row">
+		<div class="col-xs-6">
+			<input ng-model="FilterText" class="form-control" placeholder="Filter..">
+		</div>
+		<div class="col-xs-6">
+			<button ng-click="Refresh()" class="btn btn-default pull-right" type="button"><span
+					class="glyphicon glyphicon-refresh"></span></button>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-12">
+
+
+		</div>
+
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Actions</th>
+
+						<th ng-click="Order( 'DisplayName' )" ng-class="SortClass( 'DisplayName' )">Username</th>
+						<th class="text-right" ng-click="Order( 'SteamID' )" ng-class="SortClass( 'SteamID' )">Steam
+							ID</th>
+						<th class="text-right" ng-click="Order( 'ViolationLevel' )"
+							ng-class="SortClass( 'ViolationLevel' )">Violation Level</th>
+						<th class="text-right" ng-click="Order( 'Address' )" ng-class="SortClass( 'Address' )">
+							Address</th>
+						<th class="text-right" ng-click="Order( 'Ping' )" ng-class="SortClass( 'Ping' )">Ping</th>
+						<th class="text-right" ng-click="Order( 'ConnectedSeconds' )"
+							ng-class="SortClass( 'ConnectedSeconds' )">Duration</th>
+					</tr>
+				</thead>
+				<tr ng-repeat="line in Players | orderBy: OrderBy | filter:FilterText"
+					href="#/{{address}}/player/{{line.SteamID}}/">
+
+					<td>
+						<div class="btn-group">
+							<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"
+								aria-haspopup="true" aria-expanded="false">
+								<span class="glyphicon glyphicon-cog"></span> <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="http://www.steamcommunity.com/profiles/{{line.SteamID}}" target="_blank">
+										<span class="glyphicon glyphicon-info-sign"></span>
+										Steam Profile
+									</a>
+								</li>
+								<li class="divider"></li>
+								<li>
+									<a href ng-click="showActionDialog(line.SteamID, 'Kick')">
+										<span class="glyphicon glyphicon-trash"></span>
+										Kick
+									</a>
+								</li>
+								<li>
+									<a href ng-click="showActionDialog(line.SteamID, 'Kick')">
+										<span class="glyphicon glyphicon-oil"></span>
+										Ban
+									</a>
+								</li>
+								<li>
+									<a href="#/:address/perms">
+
+										<span class="glyphicon glyphicon-file"></span>
+										Manage Permissions
+									</a>
+								</li>
+							</ul>
+						</div>
+					</td>
+
+					<td>
+						<a href="#/{{address}}/player/{{line.SteamID}}/">{{line.DisplayName}}</a>
+					</td>
+
+					<td style="text-align: right">
+						<a href="#/{{address}}/player/{{line.SteamID}}/">{{line.SteamID}}</a>
+					</td>
+
+					<td class="text-right" ng-class="{fade: line.ViolationLevel == 0 }">
+						{{line.ViolationLevel}}
+					</td>
+
+					<td class="text-right">
+						{{line.Address}}
+					</td>
+
+					<td class="text-right">
+						{{line.Ping}}
+					</td>
+
+					<td class="text-right">
+						{{line.ConnectedSeconds | SecondsToDuration}}
+					</td>
+
+					<md-divider></md-divider>
+				</tr>
+				<!-- TEST USER -->
+				<tr>
+					<td>
+						<div class="btn-group">
+							<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"
+								aria-haspopup="true" aria-expanded="false">
+								<span class="glyphicon glyphicon-cog"></span> <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="http://www.steamcommunity.com/profiles/{{line.SteamID}}" target="_blank">
+										<span class="glyphicon glyphicon-info-sign"></span>
+										Steam Profile
+									</a>
+								</li>
+								<li class="divider"></li>
+								<li>
+									<a href ng-click="showActionDialog(line, 'Kick')">
+										<span class="glyphicon glyphicon-trash"></span>
+										Kick
+									</a>
+								</li>
+								<li>
+									<a href ng-click="showActionDialog(line, 'Ban')">
+										<span class="glyphicon glyphicon-oil"></span>
+										Ban
+									</a>
+								</li>
+								<li>
+									<a href="#/:address/perms">
+
+										<span class="glyphicon glyphicon-file"></span>
+										Manage Permissions
+									</a>
+								</li>
+							</ul>
+						</div>
+					</td>
+
+					<td>
+						<a href="#/{{address}}/player/TestUser/">TestUser</a>
+					</td>
+
+					<td style="text-align: right">
+						<a href="#/{{address}}/player/TestUser/">76589429327893573</a>
+					</td>
+
+					<td class="text-right" ng-class="{fade: line.ViolationLevel == 0 }">
+						0
+					</td>
+
+					<td class="text-right">
+						127.0.0.1
+					</td>
+
+					<td class="text-right">
+						-13
+					</td>
+
+					<td class="text-right">
+						0
+					</td>
+				</tr>
+
+			</table>
+			<div class="modal-container" ng-show="showModal">
+				<div class="modal-dialog">
+					<h2>{{ playerAction }} Player</h2>
+					<p>{{ playerAction }} reason:</p>
+					<input type="text" ng-model="actionReason" placeholder="Enter {{ playerAction }} Reason">
+					<br>
+					<button ng-click="performAction(selectedPlayer.SteamID, actionReason)">Confirm {{ playerAction
+						}}</button>
+					<button ng-click="hideActionDialog()">Cancel</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+</div>

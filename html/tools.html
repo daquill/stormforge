@@ -1,0 +1,31 @@
+<div ng-controller="ToolsController" class="container">
+    <div class="row">
+        <h2>Give Item</h2>
+        <label for="player-dropdown">Select a Player:</label>
+        <select id="player-dropdown" ng-model="selectedPlayer">
+            <option value="all">Give To All Players</option>
+            <option ng-repeat="player in Players" value="{{ player.id }}">{{ player.name }}</option>
+        </select>
+        <br>
+        <div>
+            <div ng-repeat="itemRow in itemRows">
+                <div class="suggestions">
+                    <span ng-repeat="filteredItem in itemRow.filteredItems">
+                        {{ suggestion }}
+                    </span>
+                    <br>
+                    <input type="text" ng-model="itemRow.searchText" placeholder="Search for an item"
+                        ng-change="filterItems( itemRow )">
+                    <input type="number" ng-model="itemRow.amount" placeholder="Amount">
+                    <button ng-click="addItemRow()" style="color: green;">+</button>
+                    <button ng-click="removeItemRow($index)" ng-show="itemRows.length > 1"
+                        style="color: red;">-</button>
+
+                    <div ng-show="showSuggestions">
+                        <span ng-repeat="suggestion in suggestions">{{ suggestion }}</span>
+                    </div>
+                </div>
+            </div>
+            <button ng-click="giveItems()">Give Items</button>
+        </div>
+    </div>

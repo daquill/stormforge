@@ -1,0 +1,48 @@
+<div ng-controller="PluginListController" id="PluginListController">
+
+  <!-- Add a filter input and refresh button here if needed -->
+  <div class="row">
+    <div class="col-xs-6">
+      <input ng-model="FilterText" class="form-control" placeholder="Filter..">
+    </div>
+    <div class="col-xs-6">
+      <button ng-click="Refresh()" class="btn btn-default pull-right" type="button"><span
+          class="glyphicon glyphicon-refresh"></span></button>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Actions</th>
+          <th>Plugin Name</th>
+          <th>Version</th>
+          <th>Status</th>
+          <th>Author</th>
+          <th>Load Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="plugin in Plugins">
+          <td>
+            <p ng-if="plugin.status === 'Unloaded'">Unloaded</p>
+            <p ng-if="plugin.status === 'Loaded'">Loaded</p>
+            <button ng-click="togglePlugin(plugin)" class="btn btn-warning"
+              ng-if="plugin.status === 'Unloaded'">Enable</button>
+            <button ng-click="togglePlugin(plugin)" class="btn btn-primary"
+              ng-if="plugin.status === 'Loaded'">Disable</button>
+            <button ng-click="showError(plugin)" class="btn btn-danger"
+              ng-if="plugin.status === 'Error'">Details</button>
+          </td>
+          <td><span class="pull-left">{{plugin.name}}</span> <a class="pull-right"
+              href="https://umod.org/plugins/{{plugin.filename}}">Umod</a></td>
+          <td>{{plugin.version}}</td>
+          <td>{{plugin.status}}</td>
+          <td>{{plugin.author}}</td>
+          <td>{{plugin.compileTime}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

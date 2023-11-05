@@ -1,0 +1,16 @@
+<div ng-controller="ConsoleController" id="ConsoleController">
+
+    <div class="text-center">
+        <button class="btn btn-success" ng-click="StartServer()">Start</button>
+        <button class="btn btn-warning" ng-click="RestartServer()">Restart</button>
+        <button class="btn btn-danger" ng-click="StopServer()">Stop</button>
+    </div>
+    <div style="height: 600px" class="Output scrollable">
+        <div ng-repeat="line in Output" ng-class="line.Class">{{line.Message}}</div>
+    </div>
+
+    <form ng-submit="SubmitCommand()">
+        <input type="text" class="form-control" ng-model="Command" ng-keyup="KeyUp($event)" />
+    </form>
+    <br><br>
+</div>
